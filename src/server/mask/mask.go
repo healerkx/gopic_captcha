@@ -7,7 +7,7 @@ import (
 	"image/draw"
 	"image/png"
 	"os"
-	//"time"
+	"math/rand"
 	"io"
 )
 
@@ -65,7 +65,9 @@ func GetWallImage(src, mask image.Image, copyPoint image.Point) (draw.Image, err
 	srcBounds := src.Bounds()
 	maskBounds := mask.Bounds()
 
-	white := image.Uniform{color.RGBA{255, 255, 255, 255}}
+	white := image.Uniform{
+        C: color.RGBA{ 255, 255, 255, 255 },
+    }
 	whiteImg := image.NewRGBA(maskBounds)
 	draw.Draw(whiteImg, maskBounds, &white, image.ZP, draw.Over)
 
@@ -85,4 +87,58 @@ func GetPieceImage(src, mask image.Image, copyPoint image.Point) (draw.Image, er
 	draw.DrawMask(copy, maskBounds, src, copyPoint, mask, maskBounds.Min, draw.Over)
 
 	return copy, nil
+}
+
+func ShuffleImage(src image.Image, index []rune, shuffle bool) (draw.Image, []rune) {
+
+    dest := make([]rune, 26)
+	perm := rand.Perm(26)
+
+	srcBounds := src.Bounds()
+	partWidth := srcBounds.Dx() / 13
+	partHeight := srcBounds.Dy() / 2
+	partBounds := image.Rectangle{
+        Min: srcBounds.Min,
+        Max: image.Point{
+            X: partWidth,
+            Y: partHeight,
+        },
+    }
+
+    copy := image.NewRGBA(srcBounds)
+
+	for i, v := range perm {
+        if !shuffle {
+            v = i
+        }
+        x1 := i
+        y1 := 0
+        x2 := v
+        y2 := 0
+
+        if i / 13 == 1 {
+            x1 = x1 - 13
+            y1 = 1
+        }
+
+        if v / 13 == 1 {
+            x2 = v - 13
+            y2 = 1
+        }
+
+        p1 := image.Point{
+            X: x1 * partWidth,
+            Y: y1 * partHeight,
+        }
+
+        p2 := image.Point{
+            X: x2 * partWidth,
+            Y: y2 * partHeight,
+        }
+
+        draw.Draw(copy, partBounds.Add(p1), src, p2, draw.Over)
+		dest[v] = index[i]
+	}
+
+	return copy, dest
 }

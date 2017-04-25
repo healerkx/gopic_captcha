@@ -15,9 +15,11 @@ type CaptchaController struct {
 }
 
 type PictureInfo struct {
-	Wall string		`json:"wall"`
-	Piece string	`json:"piece"`
-	Key string		`json:"key"`
+	Wall 	string		`json:"wall"`
+	Piece 	string		`json:"piece"`
+	Key 	string		`json:"key"`
+	Index 	string		`json:"index"`
+	Shuffle string		`json:"shuffle"`
 
 }
 
@@ -42,6 +44,11 @@ func (c *CaptchaController) GetPicturesInfo() {
 	var f1 = fmt.Sprintf("examples/wall_%s.png", key)
 	var f2 = fmt.Sprintf("examples/piece_%s.png", key)
 
+	var shuffle = c.Input().Get("shuffle")
+	var index = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	c1, index = mask.ShuffleImage(c1, index, shuffle == "1")
+
 	mask.CreateImageFile(f1, c1)
 	mask.CreateImageFile(f2, c2)
 
@@ -50,6 +57,8 @@ func (c *CaptchaController) GetPicturesInfo() {
 		Wall: f1,
 		Piece: f2,
 		Key: key,
+		Index: string(index),
+		Shuffle: shuffle,
 	}
 
 	c.Data["json"] = pi

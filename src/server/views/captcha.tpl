@@ -208,6 +208,7 @@
             type: "get",
             dataType: "json",
             success: function (data) {
+            	console.log(44)
                 gdata = data;
                 var split = data.split;
 
@@ -287,7 +288,7 @@
         $(document).unbind("mousemove");
     });
 
-    instoreData();
+    // instoreData();
 
     function round_match(pos, md5) {
 
@@ -305,6 +306,21 @@
 
         return false;
     }
+
+    function setPictures(info) {
+    	console.log(info.index)
+    }
+
+    $(function() {
+    	$.ajax({
+            url: "/captcha/pictures?shuffle=1&_t=" + (new Date()).getTime(),
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+            	setPictures(data);
+            }
+        });
+    });
 
 </script>
 </body>
