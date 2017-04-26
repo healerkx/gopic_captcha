@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 	"math/rand"
+	"image/draw"
 )
 
 type CaptchaController struct {
@@ -20,6 +21,7 @@ type PictureInfo struct {
 	Key 	string		`json:"key"`
 	Index 	string		`json:"index"`
 	Shuffle string		`json:"shuffle"`
+	OffsetY int         `json:"offsetY"`
 
 }
 
@@ -35,9 +37,12 @@ func (c *CaptchaController) GetPicturesInfo() {
     var index []rune = nil
 	var f1 = ""
 	var f2 = ""
+	var offsetY = 40
 	// TODO: Load image from disk cache
 	if key == "" {
-		var c1, c2, _ = mask.GetDefaultBackgroundAfterMask()
+		var c1, c2 draw.Image = nil, nil
+		c1, c2, offsetY, _ = mask.GetDefaultBackgroundAfterMask()
+
 		rand.Seed(time.Now().UnixNano())
 		var secret = fmt.Sprintf("%d%d", time.Now().UnixNano(), rand.Intn(100))
 		h := md5.New()
@@ -69,6 +74,7 @@ func (c *CaptchaController) GetPicturesInfo() {
 		Key: key,
 		Index: string(index),
 		Shuffle: shuffle,
+		OffsetY: offsetY,
 	}
 
 	c.Data["json"] = pi

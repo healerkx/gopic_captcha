@@ -423,38 +423,11 @@
     $('.gt_refresh_button').click(function () {
         window.location.reload();
     });
-    $('.gt_slider_knob').mousedown(function (e) {
 
-        $(document).bind("mousemove", function (ev) {
-            $('.gt_flash2>img').show();
-            var offset = $('.gt_holder').offset();//DIV在页面的位置
-            var x = offset.left;//获得鼠标指针离DIV元素左边界的距离
-
-            _x = ev.pageX - x - 30;//获得X轴方向移动的值
-
-
-            start_time = Date.parse(new Date()) / 1000;
-
-            $('title').text(_x);
-            if (_x < 0) {
-                $('.gt_slider_knob').css({left: 0});
-                $('.gt_flash2>img').css({marginLeft: 0});
-            } else if (_x > 223) {
-                $('.gt_slider_knob').css({left: 223});
-                $('.gt_flash2>img').css({marginLeft: 223});
-            } else {
-                $('.gt_slider_knob').css({left: _x});
-                $('.gt_flash2>img').css({marginLeft: _x});
-            }
-
-        });
-
-    });
 
     $('.gt_slider_knob').mouseup(function () {
 
         var time = Date.parse(new Date()) / 1000 - start_time;
-
 
         if (round_match(_x, gdata.md5)) {
             $('.gt_slider_knob').unbind("mousedown");
@@ -486,6 +459,10 @@
         return false;
     }
 
+    function showPiece() {
+        $('.gt_flash2').show(500);
+    }
+
     function setShuffledBackground(index, wall) {
         var parts = [];
         
@@ -498,6 +475,7 @@
 
 			// console.log(i, v, String.fromCharCode(65 + v), x, y, x*20, y*58)
 			var div = $('#part-template').clone()
+                .removeAttr('id')
 				.addClass('gt_cut_fullbg_slice')
 				.css('background-image', 'url(' + wall + ')')
 				.css('background-position-x', '-' + x * 20 + 'px')
@@ -510,6 +488,10 @@
     	console.log(info.index)
 
     	setShuffledBackground(info.index, info.wall);
+
+        $('.gt_flash2').html('<img src="' + info.piece + '" />').hide();
+        $('.gt_flash2>img').css('margin-top', info.offsetY + "px");
+        
     }
 
     $(function() {
@@ -521,6 +503,26 @@
             	setPictures(data);
             }
         });
+
+        $('.gt_slider_knob').mousedown(function (e) {
+            
+            showPiece();
+
+            $(document).bind("mousemove", function (ev) {                
+                var offset = $('.gt_holder').offset();
+                var x = offset.left;
+                var offsetX = ev.pageX - x - 30;
+
+                start_time = Date.parse(new Date()) / 1000;
+
+                offsetX = offsetX > 0 ? offsetX : 0;
+                offsetX = offsetX > 233 ? 233 : offsetX;
+
+                $('.gt_slider_knob').css({left: offsetX});
+                $('.gt_flash2>img').css({marginLeft: offsetX});
+            });
+
+        });        
     });
 
 </script>
