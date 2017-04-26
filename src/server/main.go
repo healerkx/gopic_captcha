@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	beego.BConfig.WebConfig.StaticDir["/static"] = "static"
 	beego.Run()
 }
 

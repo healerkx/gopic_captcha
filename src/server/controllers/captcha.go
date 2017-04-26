@@ -30,27 +30,37 @@ func (c *CaptchaController) Get() {
 
 func (c *CaptchaController) GetPicturesInfo() {
 
+	var key = c.Input().Get("key")
+    var shuffle = c.Input().Get("shuffle")
+    var index []rune = nil
+	var f1 = ""
+	var f2 = ""
 	// TODO: Load image from disk cache
-	var c1, c2, _ = mask.GetDefaultBackgroundAfterMask()
-	rand.Seed(time.Now().UnixNano())
-	var secret = fmt.Sprintf("%d%d", time.Now().UnixNano(), rand.Intn(100))
-	h := md5.New()
+	if key == "" {
+		var c1, c2, _ = mask.GetDefaultBackgroundAfterMask()
+		rand.Seed(time.Now().UnixNano())
+		var secret = fmt.Sprintf("%d%d", time.Now().UnixNano(), rand.Intn(100))
+		h := md5.New()
 
-	h.Write([]byte(secret)) // 需要加密的字符串为 123456
+		h.Write([]byte(secret)) // 需要加密的字符串为 123456
 
-	cipherStr := h.Sum(nil)
+		cipherStr := h.Sum(nil)
 
-	var key = hex.EncodeToString(cipherStr)
-	var f1 = fmt.Sprintf("examples/wall_%s.png", key)
-	var f2 = fmt.Sprintf("examples/piece_%s.png", key)
+		var key = hex.EncodeToString(cipherStr)
+		f1 = fmt.Sprintf("static/pictures/wall_%s.png", key)
+		f2 = fmt.Sprintf("static/pictures/piece_%s.png", key)
 
-	var shuffle = c.Input().Get("shuffle")
-	var index = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		index = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-	c1, index = mask.ShuffleImage(c1, index, shuffle == "1")
+		c1, index = mask.ShuffleImage(c1, index, shuffle == "1")
 
-	mask.CreateImageFile(f1, c1)
-	mask.CreateImageFile(f2, c2)
+		mask.CreateImageFile(f1, c1)
+		mask.CreateImageFile(f2, c2)
+	} else {
+		f1 = fmt.Sprintf("static/pictures/wall_%s.png", key)
+		f2 = fmt.Sprintf("static/pictures/piece_%s.png", key)
+        index = []rune(c.Input().Get("index"))
+	}
 
 	var pi PictureInfo
 	pi = PictureInfo {
