@@ -51,7 +51,7 @@ func copySrc(src image.Image) draw.Image {
 }
 
 // Test
-func GetDefaultBackgroundAfterMask() (draw.Image, draw.Image, int,  error) {
+func GetDefaultBackgroundAfterMask() (draw.Image, draw.Image, int, int,  error) {
 
 	src := LoadSrcImage("examples/origin.png")
 	mask := LoadMaskImage("examples/mask.png")
@@ -59,7 +59,7 @@ func GetDefaultBackgroundAfterMask() (draw.Image, draw.Image, int,  error) {
 	y := 40
 	copy1, _ := GetWallImage(src, mask, image.Pt(x, y))
 	copy2, _ := GetPieceImage(src, mask, image.Pt(x, y))
-	return copy1, copy2, y, nil
+	return copy1, copy2, x, y, nil
 }
 
 func GetWallImage(src, mask image.Image, copyPoint image.Point) (draw.Image, error) {

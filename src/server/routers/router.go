@@ -11,4 +11,5 @@ func init() {
 	beego.Router("/pic", &controllers.PictureController{})
 	beego.Router("/captcha", &controllers.CaptchaController{})
 	beego.Router("/captcha/pictures", &controllers.CaptchaController{}, "get:GetPicturesInfo")
+	beego.Router("/captcha/validate", &controllers.CaptchaController{}, "get:Validate")
 }

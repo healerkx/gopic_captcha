@@ -353,10 +353,10 @@
                     <div class="gt_help_tips">帮助反馈</div>
                 </a><a class="gt_logo_button" href="http://www.geetest.com" target="_blank"></a></div>
         </div>
-        <div class="gt_input"><input type="hidden" class="geetest_challenge" name="geetest_challenge"><input
-                    type="hidden" class="geetest_validate" name="geetest_validate"><input type="hidden"
-                                                                                          class="geetest_seccode"
-                                                                                          name="geetest_seccode"></div>
+        <div class="gt_input"><input type="hidden" class="geetest_challenge" name="geetest_challenge">
+            <input type="hidden" class="geetest_validate" name="geetest_validate">
+            <input type="hidden" class="geetest_seccode" name="geetest_seccode">
+        </div>
         <div class="gt_slider">
             <div class="gt_guide_tip gt_show">&gt;&gt;&gt; 拖动滑块完成验证 &gt;&gt;&gt;</div>
             <div class="gt_slider_knob gt_show" style="transform: translate(0px, 0px);">
@@ -386,11 +386,20 @@
         window.location.reload();
     });
 
-    function matchPosition(pos) {
+    function matchPosition(offsetX) {
+        var result = 0;
+        $.ajax({
+            url: "/captcha/validate?offsetX=" + offsetX + "&key=" + setPictures.key,
+            async: false,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                result = data.success;
+            }
 
-        
+        });
 
-        return false;
+        return result;
     }
 
     function showPiece() {
@@ -420,6 +429,7 @@
 
     function setPictures(info) {
     	console.log(info.index)
+        setPictures.key = info.key;
 
     	setShuffledBackground(info.index, info.wall);
 
@@ -448,7 +458,7 @@
                 var offset = $('.gt_holder').offset();
                 var x = offset.left;
                 var offsetX = ev.pageX - x - 30;
-console.log("MV")
+				console.log("MV")
                 start_time = Date.parse(new Date()) / 1000;
 
                 offsetX = offsetX > 0 ? offsetX : 0;
