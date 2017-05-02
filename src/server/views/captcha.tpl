@@ -440,7 +440,9 @@
 
     $(function() {
     	$.ajax({
+    	    // when DEBUG, the action with params key and index supports loading a certain picture.
             url: "/captcha/pictures?shuffle=1&key=c274209a801a97178e381364a2076767&index=ZHMIKXDEWVGNUPLSCBRAOJFYQT&_t=" + (new Date()).getTime(),
+            // ...
             url: "/captcha/pictures?shuffle=1&_t=" + (new Date()).getTime(),
             type: "get",
             dataType: "json",

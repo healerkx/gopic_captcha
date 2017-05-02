@@ -25,7 +25,7 @@ type PictureInfo struct {
 	Key 	string		`json:"key"`
 	Index 	string		`json:"index"`
 	Shuffle string		`json:"shuffle"`
-    // OffsetX int         `json:"offsetX"`    // for Test
+    // OffsetX int         `json:"offsetX"`    // for DEBUG
 	OffsetY int         `json:"offsetY"`
 }
 
@@ -89,7 +89,7 @@ func (c *CaptchaController) GetPicturesInfo() {
 		Key: key,
 		Index: string(index),
 		Shuffle: shuffle,
-        // OffsetX: offsetX,
+        // OffsetX: offsetX,    // for DEBUG
 		OffsetY: offsetY,
 	}
 

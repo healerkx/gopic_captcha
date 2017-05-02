@@ -55,8 +55,8 @@ func GetDefaultBackgroundAfterMask() (draw.Image, draw.Image, int, int,  error) 
 
 	src := LoadSrcImage("examples/origin.png")
 	mask := LoadMaskImage("examples/mask.png")
-	x := 140
-	y := 40
+	x := 80 + rand.Intn(60)
+	y := 30 + rand.Intn(15)
 	copy1, _ := GetWallImage(src, mask, image.Pt(x, y))
 	copy2, _ := GetPieceImage(src, mask, image.Pt(x, y))
 	return copy1, copy2, x, y, nil
